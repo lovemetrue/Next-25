@@ -1,3 +1,4 @@
+# .github/workflows/ci-cd.yml
 name: CI/CD
 
 on:
@@ -57,53 +58,56 @@ jobs:
       - name: Checkout (compose.yaml needed to upload)
         uses: actions/checkout@v4
 
-      - name: Generate compose.yaml
-        run: |
-          mkdir -p deploy_tmp
-          sed "s|ghcr.io/placeholder/telegram-bot:latest|${IMAGE}|g" compose.template.yaml > deploy_tmp/compose.yaml
-
       - name: Upload compose.yaml to server
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_KEY }}
           source: "compose.yaml"
           target: "/opt/telegram-bot/"
           strip_components: 0
 
-
-
       - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1
+        uses: appleboy/ssh-action@v1.2.0
         env:
+          GHCR_USER: ${{ secrets.GHCR_USER }}
+          IMAGE: ghcr.io/${{ secrets.GHCR_USER }}/telegram-bot:latest
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          IMAGE: ghcr.io/${{ github.repository_owner }}/telegram-bot:latest
+          GHCR_PAT: ${{ secrets.GHCR_PAT }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_KEY }}
-          envs: BOT_TOKEN,IMAGE
+          script_stop: true
           script: |
             set -euo pipefail
             sudo mkdir -p /opt/telegram-bot
             cd /opt/telegram-bot
 
-            # создаём .env на сервере
-            (umask 077; cat > .env <<EOF
+            # Создаём/обновляем .env без утечек
+            (umask 077; cat > .env << 'EOF'
             BOT_TOKEN=${BOT_TOKEN}
-            IMAGE=${IMAGE}
             TZ=Europe/Paris
             EOF
             )
 
+            # Устанавливаем/проверяем Docker + Compose v2 (если уже есть — шаги пропустятся)
             if ! command -v docker >/dev/null 2>&1; then
               curl -fsSL https://get.docker.com | sh
-              REMOTE_USER="$(id -un)"
-              sudo usermod -aG docker "$REMOTE_USER" || true
+              sudo usermod -aG docker $USER || true
             fi
 
-            echo "Pull new image and restart container"
-            docker compose pull
+            # Логин в GHCR и обновление образа
+            echo "${GHCR_PAT}" | docker login ghcr.io -u "${GHCR_USER}" --password-stdin
+
+            # Обновляем image ссылку в compose.yaml (GHCR_USER как var)
+            if ! grep -q "${GHCR_USER}" compose.yaml; then
+              sed -i "s#ghcr.io/.*/telegram-bot:latest#${IMAGE}#g" compose.yaml
+            fi
+
+            docker pull "${IMAGE}"
             docker compose up -d --remove-orphans
             docker image prune -f
