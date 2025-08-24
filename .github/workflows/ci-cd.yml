@@ -58,6 +58,13 @@ jobs:
       - name: Checkout (compose.yaml needed to upload)
         uses: actions/checkout@v4
 
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Upload compose.yaml to server
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -79,7 +86,6 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
-          port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_KEY }}
           script_stop: true
           script: |
@@ -90,7 +96,7 @@ jobs:
             # Создаём/обновляем .env без утечек
             (umask 077; cat > .env << 'EOF'
             BOT_TOKEN=${BOT_TOKEN}
-            TZ=Europe/Paris
+            TZ=Europe/Moscow
             EOF
             )
 
