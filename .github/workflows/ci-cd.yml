@@ -62,14 +62,6 @@ jobs:
           mkdir -p deploy_tmp
           sed "s|ghcr.io/placeholder/telegram-bot:latest|${IMAGE}|g" compose.template.yaml > deploy_tmp/compose.yaml
 
-      - name: Ensure compose.yaml exists
-        run: |
-          cd /opt/telegram-bot
-          if [ ! -f compose.yaml ]; then
-            echo "compose.yaml is missing!"
-            # Create or copy compose.yaml here
-          fi
-
       - name: Upload compose.yaml to server
         uses: appleboy/scp-action@v0.1.7
         with:
