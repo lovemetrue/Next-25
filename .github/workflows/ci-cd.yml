@@ -66,7 +66,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_KEY }}
           source: "compose.yaml"
-          target: "/opt/telegram-bot/"
+          target: "/opt/telegram-bot/database"
           strip_components: 0
 
       - name: Deploy via SSH
@@ -75,7 +75,7 @@ jobs:
           GHCR_USER: ${{ secrets.GHCR_USER }}
           IMAGE: ghcr.io/${{ secrets.GHCR_USER }}/telegram-bot:latest
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          GHCR_PAT: ${{ secrets.GHCR_PAT }}
+          GHCR_PAT: ${{ secrets.GHCR_TOKEN }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}

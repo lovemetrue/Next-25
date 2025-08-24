@@ -1,15 +1,29 @@
 name: telegram-bot
 
-
 services:
   bot:
-    image: ghcr.io/${GHCR_USER}/telegram-bot:latest
-    env_file: .env
-    volumes:
-      - /opt/telegram-bot/data:/app/database  # <- тут хранишь sqlite/json/файлы
+    image: ghcr.io/${GHCR_USER}/telegram-bot:latest   # будет перезаписываться latest'ом из CI
+    # Если хочешь собирать локально без GHCR — закоммить image и включи build:
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    env_file:
+      - .env
     restart: unless-stopped
+    # Если хранишь файлик с данными — раскомментируй volume:
+    # volumes:
+    #   - bot-data:/app/data
+    volumes:
+      - /opt/telegram-bot/database/Next'25.db:/app/database/Next'25.db
+    # Ресурсные лимиты (Compose v2 поддерживает):
+
     mem_limit: 256m
-    cpus: "0.5"
+    cpus: "0.50"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
 
 # volumes:
 #   bot-data:
