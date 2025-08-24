@@ -16,7 +16,7 @@ import logging
 from app.keyboards.main_menu import get_main_menu
 from peewee import fn
 from app.states.request_states import RequestsStates
-from handlers.chat import register_chat_handlers
+from app.handlers.chat import register_chat_handlers
 
 
 PREFIX_MAP = {
