@@ -90,9 +90,6 @@ def get_request_status_keyboard():
     return markup
 
 # keyboards/request_actions.py
-from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
-from database.models import OrderStatus
-
 def get_request_actions_keyboard(order, role="dispatcher", include_chat: bool = True):
     """
     Возвращает InlineKeyboardMarkup с кнопками, подходящими для роли.
