@@ -2,7 +2,7 @@ name: telegram-bot
 
 services:
   bot:
-    image: ghcr.io/${GHCR_USER}/telegram-bot:latest   # будет перезаписываться latest'ом из CI
+    image: ${IMAGE} # будет перезаписываться latest'ом из CI
     # Если хочешь собирать локально без GHCR — закоммить image и включи build:
     # build:
     #   context: .
