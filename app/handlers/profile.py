@@ -3,7 +3,7 @@ from telebot import TeleBot, types
 from loguru import logger
 
 from app.database.models import User, UserRole
-from keyboards.main_menu import get_main_menu
+from app.keyboards.main_menu import get_main_menu
 
 
 def register_profile_handlers(bot: TeleBot):
