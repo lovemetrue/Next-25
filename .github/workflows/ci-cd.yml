@@ -1,4 +1,3 @@
-# .github/workflows/ci-cd.yml
 name: CI/CD
 
 on:
@@ -12,9 +11,7 @@ permissions:
   packages: write
 
 env:
-  IMAGE: ghcr.io/${{ github.repository_owner }}/telegram-bot
-  GHCR_USER: ${{ secrets.GHCR_USER }}
-  GHCR_PAT: ${{ secrets.GHCR_PAT }}
+  IMAGE: ghcr.io/${{ github.repository_owner }}/telegram-bot:latest
 
 jobs:
   build:
@@ -70,41 +67,25 @@ jobs:
           target: "/opt/telegram-bot/"
           strip_components: 0
 
-      - name: Check GHCR secrets
-        run: |
-          if [ -z "${{ secrets.GHCR_USER }}" ] || [ -z "${{ secrets.GHCR_PAT }}" ]; then
-            echo "GHCR_USER or GHCR_PAT is missing!"
-            exit 1
-          fi
-
-      - name: Docker Login to GHCR
-        run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u "${{ secrets.GHCR_USER }}" --password-stdin
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1
         env:
-          GHCR_USER: ${{ secrets.GHCR_USER }}
-          GHCR_PAT: ${{ secrets.GHCR_PAT }}
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          IMAGE: ghcr.io/${{ secrets.GHCR_USER }}/telegram-bot:latest
+          IMAGE: ghcr.io/${{ github.repository_owner }}/telegram-bot:latest
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
-          envs: GHCR_USER,GHCR_PAT,BOT_TOKEN,IMAGE
+          envs: BOT_TOKEN,IMAGE
           script: |
             set -euo pipefail
-
             sudo mkdir -p /opt/telegram-bot
             cd /opt/telegram-bot
 
-            # Check secrets before login
-            if [ -z "${GHCR_USER}" ] || [ -z "${GHCR_PAT}" ]; then
-              echo "GHCR_USER or GHCR_PAT is missing!"
-              exit 1
-            fi
-
+            # создаём .env на сервере
             (umask 077; cat > .env <<EOF
             BOT_TOKEN=${BOT_TOKEN}
+            IMAGE=${IMAGE}
             TZ=Europe/Paris
             EOF
             )
@@ -115,16 +96,7 @@ jobs:
               sudo usermod -aG docker "$REMOTE_USER" || true
             fi
 
-            # Docker login with error handling
-            echo "${GHCR_PAT}" | docker login ghcr.io -u "${GHCR_USER}" --password-stdin || {
-              echo "Docker login to GHCR failed. Check GHCR_PAT and GHCR_USER!";
-              exit 1;
-            }
-
-            if ! grep -q "${GHCR_USER}" compose.yaml; then
-              sed -i "s#ghcr.io/.*/telegram-bot:latest#${IMAGE}#g" compose.yaml
-            fi
-
-            docker pull "${IMAGE}"
+            echo "Pull new image and restart container"
+            docker compose pull
             docker compose up -d --remove-orphans
             docker image prune -f
