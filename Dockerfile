@@ -15,7 +15,7 @@ WORKDIR /app
 
 # Сначала копируем только pyproject.toml (чтобы кешировались зависимости)
 COPY pyproject.toml /app/
-COPY README.md /app/  # если есть
+COPY README.md /app/
 
 RUN pip install --upgrade pip && pip install .
 
