@@ -60,7 +60,7 @@ jobs:
       - name: Generate compose.yaml
         run: |
           mkdir -p deploy_tmp
-          sed "s|ghcr.io/placeholder/telegram-bot:latest|${IMAGE}|g" compose.template.yaml > deploy_tmp/compose.yaml
+          sed "s|ghcr.io/placeholder/telegram-bot:|${IMAGE}|g" compose.template.yaml > deploy_tmp/compose.yaml
 
       - name: Ensure compose.yaml exists
         run: |
