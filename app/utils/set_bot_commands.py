@@ -1,7 +1,7 @@
 # utils/set_bot_commands.py
 import logging
-from utils.loader import bot
-from config.settings import settings
+from app.utils.loader import bot
+from app.config.settings import settings
 
 logger = logging.getLogger(__name__)
 

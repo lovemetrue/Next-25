@@ -1,6 +1,6 @@
 from telebot import TeleBot
 from telebot.storage import StateMemoryStorage
-from config.settings import settings
+from app.config.settings import settings
 
 # Упрощенная инициализация storage
 state_storage = StateMemoryStorage()
