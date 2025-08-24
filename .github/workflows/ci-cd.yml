@@ -28,8 +28,8 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ secrets.GHCR_USER }}
+          password: ${{ secrets.GHCR_PAT }}
 
       - name: Extract metadata (tags, labels)
         id: meta
@@ -78,35 +78,38 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
-          port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_KEY }}
-          # ВАЖНО: перечисляем, какие переменные пробросить на удалённый хост
           envs: GHCR_USER,GHCR_PAT,BOT_TOKEN,IMAGE
-          # script_stop удалён в новых версиях — используем set -e (см. README)
           script: |
             set -euo pipefail
 
             sudo mkdir -p /opt/telegram-bot
             cd /opt/telegram-bot
 
-            # Создаём .env с ПОДСТАНОВКОЙ значений (без кавычек у EOF!)
+            # Check secrets before login
+            if [ -z "${GHCR_USER}" ] || [ -z "${GHCR_PAT}" ]; then
+              echo "GHCR_USER or GHCR_PAT is missing!"
+              exit 1
+            fi
+
             (umask 077; cat > .env <<EOF
             BOT_TOKEN=${BOT_TOKEN}
             TZ=Europe/Paris
             EOF
             )
 
-            # Установим Docker, если нет
             if ! command -v docker >/dev/null 2>&1; then
               curl -fsSL https://get.docker.com | sh
               REMOTE_USER="$(id -un)"
               sudo usermod -aG docker "$REMOTE_USER" || true
             fi
 
-            # Логин в GHCR и подтягиваем образ
-            echo "${GHCR_PAT}" | docker login ghcr.io -u "${GHCR_USER}" --password-stdin
+            # Docker login with error handling
+            echo "${GHCR_PAT}" | docker login ghcr.io -u "${GHCR_USER}" --password-stdin || {
+              echo "Docker login to GHCR failed. Check GHCR_PAT and GHCR_USER!";
+              exit 1;
+            }
 
-            # Подменим image в compose.yaml, если нужно
             if ! grep -q "${GHCR_USER}" compose.yaml; then
               sed -i "s#ghcr.io/.*/telegram-bot:latest#${IMAGE}#g" compose.yaml
             fi
