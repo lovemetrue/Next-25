@@ -2,7 +2,7 @@ name: telegram-bot
 
 services:
   bot:
-    image: ${IMAGE} # будет перезаписываться latest'ом из CI
+    image: ghcr.io/${GHCR_USER}/telegram-bot:latest   # будет перезаписываться latest'ом из CI
     # Если хочешь собирать локально без GHCR — закоммить image и включи build:
     # build:
     #   context: .
@@ -16,7 +16,6 @@ services:
     volumes:
       - /opt/telegram-bot/database/:/app/database/
     # Ресурсные лимиты (Compose v2 поддерживает):
-
     mem_limit: 256m
     cpus: "0.50"
     logging:
