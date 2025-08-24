@@ -85,7 +85,7 @@ def _active_manager_exists() -> bool:
 
 # Настройка логирования
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.ERROR,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
         logging.FileHandler("logs/bot.log", encoding='utf-8'),

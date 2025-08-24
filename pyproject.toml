@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "Next25-bot"               # имя пакета (публиковать на PyPI не обязательно)
+version = "0.1.0"
+description = "Next'25-bot"
+readme = "README.md"
+requires-python = ">=3.13"
+
+# Здесь зависимости, которые раньше были в requirements.txt
+dependencies = [
+    "setuptools>=61.0",
+    "pyTelegramBotAPI>=4.9.0",
+    "python-dotenv>=1.0.0",
+    "peewee>=3.17.0",
+    "loguru>=0.7.0",
+    "openpyxl>=3.1.2",  # Для Excel-отчетов
+    "reportlab>=4.0.4", # Для PDF-отчетов
+    "pillow>=10.0.0",  # Для работы с изображениями
+    "python-dateutil>=2.8.2",
+    "pytz>=2023.3",
+    "phonenumberslite>=9.0.12",
+    "xlsxwriter>=3.2.5"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]
