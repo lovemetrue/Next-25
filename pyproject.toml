@@ -25,6 +25,5 @@ dependencies = [
 ]
 requires-python = ">=3.13"
 
-
-[tool.setuptools]
-packages = ["app"]
+[tool.setuptools.packages.find]
+where = ["."]
