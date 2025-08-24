@@ -88,10 +88,6 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
-          GHCR_USER: ${{ secrets.GHCR_USER }}
-          IMAGE: ghcr.io/${{ secrets.GHCR_USER }}/telegram-bot:latest
-          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          GHCR_PAT: ${{ secrets.GHCR_PAT }}
           script_stop: true
           script: |
             set -euo pipefail
