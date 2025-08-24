@@ -57,6 +57,11 @@ jobs:
       - name: Checkout (compose.yaml needed to upload)
         uses: actions/checkout@v4
 
+      - name: Generate compose.yaml
+        run: |
+          mkdir -p deploy_tmp
+          sed "s|ghcr.io/placeholder/telegram-bot:latest|${IMAGE}|g" compose.template.yaml > deploy_tmp/compose.yaml
+
       - name: Upload compose.yaml to server
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -66,6 +71,8 @@ jobs:
           source: "compose.yaml"
           target: "/opt/telegram-bot/"
           strip_components: 0
+
+
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1
