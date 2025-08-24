@@ -25,4 +25,4 @@ COPY --chown=bot:bot . /app
 USER bot
 ENV TZ=Europe/Moscow
 
-CMD ["python", "-m", "app.main"]
+CMD ["python", "-m", "main"]
