@@ -88,7 +88,7 @@ logging.basicConfig(
     level=logging.ERROR,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler("logs/bot.log", encoding='utf-8'),
+        logging.FileHandler("app/logs/bot.log", encoding='utf-8'),
         logging.StreamHandler()
     ]
 )
