@@ -1,0 +1,11 @@
+pyTelegramBotAPI>=4.9.0
+python-dotenv>=1.0.0
+peewee>=3.17.0
+loguru>=0.7.0
+openpyxl>=3.1.2  # Для Excel-отчетов
+reportlab>=4.0.4  # Для PDF-отчетов
+pillow>=10.0.0  # Для работы с изображениями
+python-dateutil>=2.8.2
+pytz>=2023.3
+phonenumberslite>=9.0.12
+xlsxwriter>=3.2.5
