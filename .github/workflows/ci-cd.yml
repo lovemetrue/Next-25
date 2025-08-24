@@ -68,6 +68,15 @@ jobs:
           target: "/opt/telegram-bot/database"
           strip_components: 0
 
+      - name: Check GHCR secrets
+        run: |
+          if [ -z "${{ secrets.GHCR_USER }}" ] || [ -z "${{ secrets.GHCR_PAT }}" ]; then
+            echo "GHCR_USER or GHCR_PAT is missing!"
+            exit 1
+          fi
+
+      - name: Docker Login to GHCR
+        run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u "${{ secrets.GHCR_USER }}" --password-stdin
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1
         env:
