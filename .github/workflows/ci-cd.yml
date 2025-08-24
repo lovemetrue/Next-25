@@ -69,39 +69,44 @@ jobs:
           strip_components: 0
 
       - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.2.0
+        uses: appleboy/ssh-action@v1
         env:
           GHCR_USER: ${{ secrets.GHCR_USER }}
-          IMAGE: ghcr.io/${{ secrets.GHCR_USER }}/telegram-bot:latest
+          GHCR_PAT: ${{ secrets.GHCR_PAT }}
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          GHCR_PAT: ${{ secrets.GHCR_TOKEN }}
+          IMAGE: ghcr.io/${{ secrets.GHCR_USER }}/telegram-bot:latest
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_KEY }}
-          script_stop: true
+          # ВАЖНО: перечисляем, какие переменные пробросить на удалённый хост
+          envs: GHCR_USER,GHCR_PAT,BOT_TOKEN,IMAGE
+          # script_stop удалён в новых версиях — используем set -e (см. README)
           script: |
             set -euo pipefail
+
             sudo mkdir -p /opt/telegram-bot
             cd /opt/telegram-bot
 
-            # Создаём/обновляем .env без утечек
-            (umask 077; cat > .env << 'EOF'
+            # Создаём .env с ПОДСТАНОВКОЙ значений (без кавычек у EOF!)
+            (umask 077; cat > .env <<EOF
             BOT_TOKEN=${BOT_TOKEN}
             TZ=Europe/Paris
             EOF
             )
 
-            # Устанавливаем/проверяем Docker + Compose v2 (если уже есть — шаги пропустятся)
+            # Установим Docker, если нет
             if ! command -v docker >/dev/null 2>&1; then
               curl -fsSL https://get.docker.com | sh
-              sudo usermod -aG docker $USER || true
+              REMOTE_USER="$(id -un)"
+              sudo usermod -aG docker "$REMOTE_USER" || true
             fi
 
-            # Логин в GHCR и обновление образа
+            # Логин в GHCR и подтягиваем образ
             echo "${GHCR_PAT}" | docker login ghcr.io -u "${GHCR_USER}" --password-stdin
 
-            # Обновляем image ссылку в compose.yaml (GHCR_USER как var)
+            # Подменим image в compose.yaml, если нужно
             if ! grep -q "${GHCR_USER}" compose.yaml; then
               sed -i "s#ghcr.io/.*/telegram-bot:latest#${IMAGE}#g" compose.yaml
             fi

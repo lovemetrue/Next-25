@@ -14,7 +14,7 @@ services:
     # volumes:
     #   - bot-data:/app/data
     volumes:
-      - /opt/telegram-bot/database/Next'25.db:/app/database/Next'25.db
+      - /opt/telegram-bot/database/:/app/database/
     # Ресурсные лимиты (Compose v2 поддерживает):
 
     mem_limit: 256m
