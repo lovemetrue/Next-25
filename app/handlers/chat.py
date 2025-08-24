@@ -1,7 +1,7 @@
 # handlers/chat.py
 from datetime import datetime
 from telebot import TeleBot, types
-from database.models import Order, User, OrderMessage, Attachment, UserRole
+from app.database.models import Order, User, OrderMessage, Attachment, UserRole
 
 
 def register_chat_handlers(bot: TeleBot):

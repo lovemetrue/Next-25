@@ -10,7 +10,7 @@ from peewee import (
     DateTimeField, ForeignKeyField, TextField, FloatField
 )
 
-from .session import db  # общий экземпляр базы
+from app.session import db  # общий экземпляр базы
 
 
 # ====== Базовая модель ======

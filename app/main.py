@@ -1,16 +1,16 @@
 import os
 from loguru import logger
-from utils.loader import bot
 from telebot import TeleBot
-from handlers.start import register_handlers
-from database.models import create_all_tables
 from telebot.storage import StateMemoryStorage
-from handlers.manager import register_manager_handlers
-from handlers.profile import register_profile_handlers
-from handlers.driver import register_driver_handlers
-from handlers.dispatcher import register_dispatcher_handlers
-from handlers.chat import register_chat_handlers
-from config.settings import settings
+from app.utils.loader import bot
+from app.handlers.start import register_handlers
+from app.database.models import create_all_tables
+from app.handlers.manager import register_manager_handlers
+from app.handlers.profile import register_profile_handlers
+from app.handlers.driver import register_driver_handlers
+from app.handlers.dispatcher import register_dispatcher_handlers
+from app.handlers.chat import register_chat_handlers
+from app.config.settings import settings
 
 
 # db
@@ -30,5 +30,4 @@ logger.info("Bot is up")
 bot.infinity_polling(skip_pending=True)
 
 if __name__ == "__main__":
-    bot.set_my_commands(settings.BOT_COMMANDS)
     main()

@@ -1,11 +1,11 @@
 # handlers/driver.py
 from telebot import TeleBot, types
 from datetime import datetime, timedelta
-from database.models import User, Order, OrderStatus, UserRole, OrderStatusHistory
-from keyboards.request_actions import get_request_actions_keyboard
-from keyboards.main_menu import get_main_menu
+from app.database.models import User, Order, OrderStatus, UserRole, OrderStatusHistory
+from app.keyboards.request_actions import get_request_actions_keyboard
+from app.keyboards.main_menu import get_main_menu
 from peewee import fn
-from states.request_states import DriverStates
+from app.states.request_states import DriverStates
 import logging
 
 # Настройка логирования

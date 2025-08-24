@@ -1,5 +1,5 @@
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
-from database.models import Order, OrderStatus
+from app.database.models import Order, OrderStatus
 from telebot import types
 
 

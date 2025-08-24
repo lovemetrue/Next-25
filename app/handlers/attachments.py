@@ -16,8 +16,8 @@ from reportlab.pdfgen import canvas
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
-from database.models import Order, User, UserRole, OrderStatus, OrderPrefix, Attachment
-from states.request_states import RequestsStates
+from app.database.models import Order, User, UserRole, OrderStatus, OrderPrefix, Attachment
+from app.states.request_states import RequestsStates
 # Путь(ы) где искать TTF-шрифты (попробуем несколько типичных)
 _TRY_TTF_PATHS = [
     "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",

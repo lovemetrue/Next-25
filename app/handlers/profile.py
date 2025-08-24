@@ -2,7 +2,7 @@
 from telebot import TeleBot, types
 from loguru import logger
 
-from database.models import User, UserRole
+from app.database.models import User, UserRole
 from keyboards.main_menu import get_main_menu
 
 

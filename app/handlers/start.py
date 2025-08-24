@@ -5,8 +5,8 @@ from loguru import logger
 from datetime import datetime
 from telebot import TeleBot, types
 import phonenumbers  # пакет phonenumberslite
-from database.models import User, UserRole, db
-from keyboards.main_menu import get_main_menu
+from app.database.models import User, UserRole, db
+from app.keyboards.main_menu import get_main_menu
 from telebot.custom_filters import StateFilter
 from telebot.handler_backends import StatesGroup, State
 

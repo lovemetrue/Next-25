@@ -2,10 +2,10 @@
 from telebot import TeleBot, types
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 from datetime import datetime, timedelta
-from database.models import (
+from app.database.models import (
     User, Order, OrderStatus, UserRole, OrderPrefix, Attachment, OrderStatusHistory
 )
-from keyboards.request_actions import (
+from app.keyboards.request_actions import (
     get_prefix_keyboard,
     get_drivers_keyboard,
     get_request_filter_keyboard,
@@ -13,9 +13,9 @@ from keyboards.request_actions import (
     get_status_filter_keyboard
 )
 import logging
-from keyboards.main_menu import get_main_menu
+from app.keyboards.main_menu import get_main_menu
 from peewee import fn
-from states.request_states import RequestsStates
+from app.states.request_states import RequestsStates
 from handlers.chat import register_chat_handlers
 
 

@@ -4,12 +4,12 @@ from loguru import logger
 from peewee import fn
 from datetime import datetime, timedelta
 from typing import Optional
-from database.models import User, UserRole, Order, OrderStatus, OrderPrefix
-from keyboards.main_menu import get_main_menu
-from keyboards.request_actions import (
+from app.database.models import User, UserRole, Order, OrderStatus, OrderPrefix
+from app.keyboards.main_menu import get_main_menu
+from app.keyboards.request_actions import (
     get_request_actions_keyboard,
 )
-from handlers.attachments import register_attachments_reports_handlers
+from app.handlers.attachments import register_attachments_reports_handlers
 
 def register_manager_handlers(bot: TeleBot):
     """Хэндлеры для руководителя"""
