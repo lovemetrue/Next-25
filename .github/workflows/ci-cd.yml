@@ -101,6 +101,8 @@ jobs:
             # Создаём/обновляем .env без утечек
             (umask 077; cat > .env << 'EOF'
             BOT_TOKEN=${BOT_TOKEN}
+            GHCR_USER=${GHCR_USER}
+            GHCR_PAT=${GHCR_PAT}
             TZ=Europe/Moscow
             EOF
             )
