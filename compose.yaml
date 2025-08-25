@@ -14,7 +14,7 @@ services:
     # volumes:
     #   - bot-data:/app/data
     volumes:
-      - /opt/telegram-bot/database/:/app/app/database/
+      - /opt/telegram-bot/database/:/app/database/
     # Ресурсные лимиты (Compose v2 поддерживает):
     mem_limit: 256m
     cpus: "0.50"
