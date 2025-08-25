@@ -13,6 +13,8 @@ services:
     # Если хранишь файлик с данными — раскомментируй volume:
     # volumes:
     #   - bot-data:/app/data
+    environment:
+      - DB_PATH=/app/database/Next25.db
     volumes:
       - /opt/telegram-bot/database/:/app/database/
     # Ресурсные лимиты (Compose v2 поддерживает):
