@@ -10,6 +10,7 @@ from app.handlers.profile import register_profile_handlers
 from app.handlers.driver import register_driver_handlers
 from app.handlers.dispatcher import register_dispatcher_handlers
 from app.handlers.chat import register_chat_handlers
+from app.handlers.delete_user import register_delete_user_handlers
 from app.config.settings import settings
 
 
@@ -24,7 +25,7 @@ register_profile_handlers(bot) ### хендлер для вывода профи
 register_driver_handlers(bot)
 register_dispatcher_handlers(bot)
 register_manager_handlers(bot)
-
+register_delete_user_handlers(bot)
 logger.info("Bot is up")
 
 bot.infinity_polling(skip_pending=True)
